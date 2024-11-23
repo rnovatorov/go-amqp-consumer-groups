@@ -1,0 +1,36 @@
+services:
+  rabbitmq-1:
+    image: rabbitmq:3
+    volumes:
+      - ./rabbitmq/config:/etc/rabbitmq
+    environment:
+      RABBITMQ_NODENAME: "rabbit@rabbitmq-1"
+      RABBITMQ_ERLANG_COOKIE: "hello"
+
+  rabbitmq-2:
+    image: rabbitmq:3
+    volumes:
+      - ./rabbitmq/config:/etc/rabbitmq
+    environment:
+      RABBITMQ_NODENAME: "rabbit@rabbitmq-2"
+      RABBITMQ_ERLANG_COOKIE: "hello"
+
+  rabbitmq-3:
+    image: rabbitmq:3
+    volumes:
+      - ./rabbitmq/config:/etc/rabbitmq
+    environment:
+      RABBITMQ_NODENAME: "rabbit@rabbitmq-3"
+      RABBITMQ_ERLANG_COOKIE: "hello"
+
+  haproxy:
+    image: haproxy:3.0
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    depends_on:
+      - rabbitmq-1
+      - rabbitmq-2
+      - rabbitmq-3
+    ports:
+      - 15672:15672
+      - 5672:5672
